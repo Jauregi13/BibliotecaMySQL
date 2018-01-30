@@ -4,22 +4,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
+
+import modelo.Usuario;
+import modelo.UsuarioModelo;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost/biblioteca","root","");
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery("SELECT * FROM usuarios");
-			
-			while(rs.next()){
-				System.out.println(rs.getInt("id") + " "+ rs.getString("nombre") +" " + rs.getString("apellido") + " " + rs.getInt("edad"));
-			}			
 			Scanner scan = new Scanner(System.in);
+			UsuarioModelo usuarioModelo = new UsuarioModelo();
 			final int INSERTAR_USUARIO = 1;
 			final int LISTAR_USUARIOS = 2;
 			final int MODIFICAR_USUARIO = 3;
@@ -48,18 +45,47 @@ public class Main {
 					System.out.println("Introduce la edad:");
 					int edad = Integer.parseInt(scan.nextLine());
 					
-					insertarUsuario(nombre, apellido, edad);
+					Usuario usuario = new Usuario();
+					
+					usuario.setNombre(nombre);
+					usuario.setApellido(apellido);
+					usuario.setEdad(edad);
+					
+					usuarioModelo.insert(usuario);
+					
 					break;
 				
 				case LISTAR_USUARIOS:
 					
+					ArrayList<Usuario> usuarios = usuarioModelo.selectAll();
+					Iterator<Usuario> i = usuarios.iterator();
+					while(i.hasNext()){
+						Usuario listar_usuario = i.next();
+						System.out.println(listar_usuario.getId() +" " + listar_usuario.getNombre() + " " + listar_usuario.getApellido() + " " + listar_usuario.getEdad());
+					}
 					break;
 				
 				case MODIFICAR_USUARIO:
+					System.out.println("Introduce el id del usuario a modificar:");
+					int id = Integer.parseInt(scan.nextLine());
+					
+					System.out.println("Introduce el nombre nuevo:");
+					String nombre_nuevo = scan.nextLine();
+					
+					System.out.println("Introduce el apellido nuevo:");
+					String apellido_nuevo = scan.nextLine();
+					
+					System.out.println("Introduce la edad nueva:");
+					int edad_nueva = Integer.parseInt(scan.nextLine());
 					
 					break;
 				
 				case ELIMINAR_USUARIO:
+					
+					System.out.println("Introduce el id del usuario que quieres eliminar:");
+					int id_eliminar = Integer.parseInt(scan.nextLine());
+					
+					usuarioModelo.delete(id_eliminar);
 					
 					break;
 				
@@ -73,37 +99,21 @@ public class Main {
 			}
 			
 			while(opcion != SALIR);
-			
-			System.out.println("Introduce un nombre:");
-			String nombre = scan.nextLine();
-			
-			System.out.println("introduce un apellido:");
-			String apellido = scan.nextLine();
-			
-			System.out.println("Introduce la edad:");
-			int edad = Integer.parseInt(scan.nextLine());
-					
-			PreparedStatement pst = con.prepareStatement("INSERT INTO usuarios (nombre, apellido, edad) VALUES (?,?,?)");
-			
-			pst.setString(1, nombre);
-			pst.setString(2, apellido);
-			pst.setInt(3, edad);
-			
-			pst.execute();
-			
-			//st.execute("DELETE FROM usuarios WHERE nombre ='Mauricio'");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 	}
 
-	private static void insertarUsuario(String nombre, String apellido, int edad) {
-		// TODO Auto-generated method stub
+	private static void modificar_usuario(int id, String nombre_nuevo, String apellido_nuevo, int edad_nueva, Connection con) {
 		
+		try {
+			PreparedStatement pst = con.prepareStatement("UPDATE usuarios SET nombre = ?, apellido = ?, edad = ? WHERE id = "+id);
+			pst.setString(1, nombre_nuevo);
+			pst.setString(2, apellido_nuevo);
+			pst.setInt(3, edad_nueva);
+			
+			pst.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
