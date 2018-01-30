@@ -78,6 +78,15 @@ public class Main {
 					System.out.println("Introduce la edad nueva:");
 					int edad_nueva = Integer.parseInt(scan.nextLine());
 					
+					Usuario usuario_modificado = new Usuario();
+					
+					usuario_modificado.setId(id);
+					usuario_modificado.setNombre(nombre_nuevo);
+					usuario_modificado.setApellido(apellido_nuevo);
+					usuario_modificado.setEdad(edad_nueva);
+					
+					usuarioModelo.Update(usuario_modificado);
+					
 					break;
 				
 				case ELIMINAR_USUARIO:
@@ -100,20 +109,6 @@ public class Main {
 			
 			while(opcion != SALIR);
 
-	}
-
-	private static void modificar_usuario(int id, String nombre_nuevo, String apellido_nuevo, int edad_nueva, Connection con) {
-		
-		try {
-			PreparedStatement pst = con.prepareStatement("UPDATE usuarios SET nombre = ?, apellido = ?, edad = ? WHERE id = "+id);
-			pst.setString(1, nombre_nuevo);
-			pst.setString(2, apellido_nuevo);
-			pst.setInt(3, edad_nueva);
-			
-			pst.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

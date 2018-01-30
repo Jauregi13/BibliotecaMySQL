@@ -46,6 +46,20 @@ public class UsuarioModelo extends Conector{
 	}
 	
 	public void Update(Usuario usuario){
+		try {
+			PreparedStatement pst = this.conexion.prepareStatement("UPDATE usuarios SET nombre = ?, apellido = ?, edad = ? where id = "+usuario.getId());
+			
+			pst.setString(1, usuario.getNombre());
+			pst.setString(2, usuario.getApellido());
+			pst.setInt(3, usuario.getEdad());
+			
+			pst.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public ArrayList<Usuario> selectNombre(String nombre){
 		
 	}
 	
@@ -60,6 +74,21 @@ public class UsuarioModelo extends Conector{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public int selectMayorEdad(){
+		try {
+			Statement st = this.conexion.createStatement();
+			st.executeQuery("SELECT * FROM usuarios WHERE edad >= 18");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public ArrayList<Usuario> selectCadenaApellido(String cadena){
+		
 	}
 
 }
