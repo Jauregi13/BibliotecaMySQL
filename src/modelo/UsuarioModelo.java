@@ -47,7 +47,7 @@ public class UsuarioModelo extends Conector{
 	
 	public void Update(Usuario usuario){
 		try {
-			PreparedStatement pst = this.conexion.prepareStatement("UPDATE usuarios SET nombre = ?, apellido = ?, edad = ? where id = "+usuario.getId());
+			PreparedStatement pst = super.conexion.prepareStatement("UPDATE usuarios SET nombre = ?, apellido = ?, edad = ? where id = "+usuario.getId());
 			
 			pst.setString(1, usuario.getNombre());
 			pst.setString(2, usuario.getApellido());
@@ -60,6 +60,24 @@ public class UsuarioModelo extends Conector{
 	}
 	
 	public ArrayList<Usuario> selectNombre(String nombre){
+		ArrayList<Usuario> usuarios = new ArrayList();
+		try {
+			Statement st = super.conexion.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM WHERE nombre = " + nombre);
+			
+			while(rs.next()){
+				Usuario usuario = new Usuario();
+				usuario.setId(rs.getInt("id"));
+				usuario.setNombre(rs.getString("nombre"));
+				usuario.setApellido(rs.getString("apellido"));
+				usuario.setEdad(rs.getInt("edad"));
+				usuarios.add(usuario);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return usuarios;
 		
 	}
 	
@@ -78,7 +96,7 @@ public class UsuarioModelo extends Conector{
 	
 	public int selectMayorEdad(){
 		try {
-			Statement st = this.conexion.createStatement();
+			Statement st = super.conexion.createStatement();
 			st.executeQuery("SELECT * FROM usuarios WHERE edad >= 18");
 			
 		} catch (SQLException e) {
@@ -88,7 +106,24 @@ public class UsuarioModelo extends Conector{
 	}
 	
 	public ArrayList<Usuario> selectCadenaApellido(String cadena){
+		ArrayList<Usuario> usuarios = new ArrayList();
+		try {
+			Statement st = super.conexion.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM usuarios WHERE apellido like '%" + cadena + "%'");
+			while(rs.next()){
+				Usuario usuario = new Usuario();
+				usuario.setId(rs.getInt("id"));
+				usuario.setNombre(rs.getString("nombre"));
+				usuario.setApellido(rs.getString("apellido"));
+				usuario.setEdad(rs.getInt("edad"));
+				usuarios.add(usuario);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		return usuarios;
 	}
 
 }
