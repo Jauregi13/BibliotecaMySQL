@@ -1,5 +1,8 @@
 package vista;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -14,6 +17,7 @@ public class UsuarioVista {
 
 	public void menuDeUsuario(){
 		UsuarioModelo usuarioModelo = new UsuarioModelo();
+		SimpleDateFormat formato_fecha = new SimpleDateFormat("yyyy-MM/-dd");
 		Scanner scan = new Scanner(System.in);
 		int opcion = 0;
 		do {
@@ -41,13 +45,25 @@ public class UsuarioVista {
 				System.out.println("Introduce la edad:");
 				int edad = Integer.parseInt(scan.nextLine());
 				
-				Usuario usuario = new Usuario();
-				usuario.setNombre(nombre);
-				usuario.setApellido(apellido);
-				usuario.setEdad(edad);
+				System.out.println("Introduce el dni:");
+				String dni = scan.nextLine();
 				
-				usuarioModelo.insert(usuario);
-				break;
+				System.out.println("Introduce la fecha de nacimiento");
+				try {
+					Date fecha = (Date)formato_fecha.parse(scan.nextLine());
+					Usuario usuario = new Usuario();
+					usuario.setNombre(nombre);
+					usuario.setApellido(apellido);
+					usuario.setEdad(edad);
+					usuario.setDni(dni);
+					usuario.setFecha_nacimiento(fecha);
+					usuarioModelo.insert(usuario);
+					break;
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
+				
 				
 			
 			case SALIR:
@@ -70,7 +86,7 @@ public class UsuarioVista {
 		Iterator<Usuario> i = usuarios.iterator();
 		while(i.hasNext()){
 			Usuario usuario = i.next();
-			System.out.println(usuario.getId() +" " + usuario.getNombre() + " " + usuario.getApellido() + " " + usuario.getEdad());
+			System.out.println(usuario.getId() +" " + usuario.getNombre() + " " + usuario.getApellido() + " " + usuario.getEdad() + " " + usuario.getDni() + " " + usuario.getFecha_nacimiento());
 		}
 		
 	}

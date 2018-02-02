@@ -1,5 +1,6 @@
 package modelo;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,10 +12,12 @@ public class UsuarioModelo extends Conector{
 	public void insert(Usuario usuario){
 		
 		try {
-			PreparedStatement pst = super.conexion.prepareStatement("INSERT INTO usuarios (nombre, apellido, edad) values(?,?,?)");
+			PreparedStatement pst = super.conexion.prepareStatement("INSERT INTO usuarios (nombre, apellido, edad, dni, fecha_nacimiento) values(?,?,?,?,?)");
 			pst.setString(1, usuario.getNombre());
 			pst.setString(2, usuario.getApellido());
 			pst.setInt(3, usuario.getEdad());
+			pst.setString(4, usuario.getDni());
+			pst.setDate(5,new java.sql.Date(usuario.getFecha_nacimiento().getTime()));
 			pst.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -34,6 +37,8 @@ public class UsuarioModelo extends Conector{
 				usuario.setNombre(rs.getString("nombre"));
 				usuario.setApellido(rs.getString("apellido"));
 				usuario.setEdad(rs.getInt("edad"));
+				usuario.setDni(rs.getString("dni"));
+				usuario.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
 				usuarios.add(usuario);
 			}
 			
@@ -47,11 +52,13 @@ public class UsuarioModelo extends Conector{
 	
 	public void Update(Usuario usuario){
 		try {
-			PreparedStatement pst = super.conexion.prepareStatement("UPDATE usuarios SET nombre = ?, apellido = ?, edad = ? where id = "+usuario.getId());
+			PreparedStatement pst = super.conexion.prepareStatement("UPDATE usuarios SET nombre = ?, apellido = ?, edad = ?, dni = ?, fecha_nacimiento = ? where id = "+usuario.getId());
 			
 			pst.setString(1, usuario.getNombre());
 			pst.setString(2, usuario.getApellido());
 			pst.setInt(3, usuario.getEdad());
+			pst.setString(4, usuario.getDni());
+			pst.setDate(5, (Date)usuario.getFecha_nacimiento());
 			
 			pst.execute();
 		} catch (SQLException e) {
@@ -71,10 +78,11 @@ public class UsuarioModelo extends Conector{
 				usuario.setNombre(rs.getString("nombre"));
 				usuario.setApellido(rs.getString("apellido"));
 				usuario.setEdad(rs.getInt("edad"));
+				usuario.setDni(rs.getString("dni"));
+				usuario.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
 				usuarios.add(usuario);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return usuarios;
@@ -116,10 +124,11 @@ public class UsuarioModelo extends Conector{
 				usuario.setNombre(rs.getString("nombre"));
 				usuario.setApellido(rs.getString("apellido"));
 				usuario.setEdad(rs.getInt("edad"));
+				usuario.setDni(rs.getString("dni"));
+				usuario.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
 				usuarios.add(usuario);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
