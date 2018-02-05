@@ -25,7 +25,7 @@ public class UsuarioVista {
 			System.out.println("-------MENU USUARIO------");
 			System.out.println(LISTAR + ". Listar todos los usuarios");
 			System.out.println(INSERTAR + ". Insertar un usuario");
-			System.out.println(SALIR + ". Salir del programa");
+			System.out.println(SALIR + ". Salir del menu de usuarios");
 			
 			opcion = Integer.parseInt(scan.nextLine());
 			

@@ -10,15 +10,16 @@ import java.util.Scanner;
 
 import modelo.Usuario;
 import modelo.UsuarioModelo;
+import vista.BibliotecaVista;
 import vista.UsuarioVista;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
-		UsuarioVista menuUsuarios = new UsuarioVista();
+		BibliotecaVista menu_biblioteca = new BibliotecaVista();
 		
-		menuUsuarios.menuDeUsuario();
+		menu_biblioteca.menuBiblioteca();
 
 	}
 
