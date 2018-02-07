@@ -49,23 +49,22 @@ public class LibroModelo extends Conector{
 		return libro;
 	}
 	
-	public ArrayList<Libro> select(String titulo){
-		ArrayList<Libro> libros = new ArrayList();
+	public Libro select(String titulo){
 		try {
 			Statement st = super.conexion.createStatement();
-			ResultSet rs = st.executeQuery("SELECT * FROM libros WHERE titulo = " + titulo);
+			ResultSet rs = st.executeQuery("SELECT * FROM libros WHERE titulo = '" + titulo + "'");
 			
-			while(rs.next()){
+			if(rs.next()){
 				Libro libro = new Libro();
 				libro.setId(rs.getInt("id"));
 				libro.setTitulo(rs.getString("titulo"));
 				libro.setAutor(rs.getString("autor"));
-				libros.add(libro);
+				return libro;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return libros;
+		return null;
 	}
 	
 	
@@ -98,6 +97,8 @@ public class LibroModelo extends Conector{
 			PreparedStatement pst = super.conexion.prepareStatement("INSERT INTO libros (titulo,autor) values (?,?)");
 			pst.setString(1, libro.getTitulo());
 			pst.setString(2, libro.getAutor());
+			
+			pst.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

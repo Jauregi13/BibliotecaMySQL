@@ -35,7 +35,8 @@ public class BibliotecaVista {
 				break;
 			
 			case MENU_PRESTAMO:
-				
+				PrestamoVista menu_prestamo = new PrestamoVista();
+				menu_prestamo.menuPrestamo();
 				break;
 			
 			case SALIR:

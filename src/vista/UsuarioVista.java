@@ -17,7 +17,7 @@ public class UsuarioVista {
 
 	public void menuDeUsuario(){
 		UsuarioModelo usuarioModelo = new UsuarioModelo();
-		SimpleDateFormat formato_fecha = new SimpleDateFormat("yyyy-MM/-dd");
+		SimpleDateFormat formato_fecha = new SimpleDateFormat("yyyy-MM-dd");
 		Scanner scan = new Scanner(System.in);
 		int opcion = 0;
 		do {
