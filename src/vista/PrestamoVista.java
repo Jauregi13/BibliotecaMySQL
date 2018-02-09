@@ -66,6 +66,13 @@ public class PrestamoVista {
 		System.out.println("Introduce el titulo del libro a entregar:");
 		String titulo = scan.nextLine();
 		
+		LibroModelo libroModelo = new LibroModelo();
+		Libro libro = libroModelo.select(titulo);
+		
+		Prestamo prestamo = prestamoModelo.selectNoEntregado(libro, usuario);
+		
+		prestamoModelo.UpdateEntregar(prestamo);
+		
 	}
 
 	private void realizarPrestamo(Scanner scan, PrestamoModelo prestamoModelo) {
@@ -89,21 +96,29 @@ public class PrestamoVista {
 				}
 			}	
 			while(usuario == null);
-			// crear prestamo
-			Prestamo prestamo = new Prestamo();
-			// rellenar prestamo
-			prestamo.setId_libro(libro.getId());
-			prestamo.setId_usuario(usuario.getId());
+			Prestamo comprobar_prestamo = prestamoModelo.SelectPorIdLibro(libro);
 			
-			Date fecha_actual = new Date();
-			Calendar calendario = Calendar.getInstance();
-			calendario.setTime(fecha_actual);
-			prestamo.setFechaPrestamo(calendario.getTime());
-			calendario.add(Calendar.DATE, 21);
-			prestamo.setFechaLimite(calendario.getTime());
-			prestamo.setEntregado(false);
+			if(comprobar_prestamo.isEntregado() == false){
+				System.out.println("El libro está cogido prestado");
+			}
+			else{
+				// crear prestamo
+				Prestamo prestamo = new Prestamo();
+				// rellenar prestamo
+				prestamo.setId_libro(libro.getId());
+				prestamo.setId_usuario(usuario.getId());
+				
+				Date fecha_actual = new Date();
+				Calendar calendario = Calendar.getInstance();
+				calendario.setTime(fecha_actual);
+				prestamo.setFechaPrestamo(calendario.getTime());
+				calendario.add(Calendar.DATE, 21);
+				prestamo.setFechaLimite(calendario.getTime());
+				prestamo.setEntregado(false);
+				
+				prestamoModelo.insertar(prestamo);
+			}
 			
-			prestamoModelo.insertar(prestamo);
 		}
 		// el libro no existe
 		else {

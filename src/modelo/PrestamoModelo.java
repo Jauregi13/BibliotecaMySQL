@@ -52,19 +52,93 @@ public class PrestamoModelo extends Conector {
 
 	}
 	
-	public Prestamo selectPorIdLibro(int id_libro){
+	public Prestamo selectNoEntregado(int id_libro, int id_usuario){
 			
 		try {
 			Statement st = super.conexion.createStatement();
 			ResultSet rs = st.executeQuery("SELECT * FROM prestamos WHERE id_libro = '"+id_libro+"'");
 			
 			if(rs.next()){
+				Prestamo prestamo = new Prestamo();
 				
+				
+				return prestamo;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
+		return null;
+		
+	}
+	
+	public Prestamo selectNoEntregado(Libro libro, Usuario usuario){
+		try {
+			PreparedStatement ps = super.conexion.prepareStatement("SELECT * FROM prestamos WHERE id_libro = ?  AND id_usuario = ? AND entregado= ?");
+			
+			ps.setInt(1, libro.getId());
+			ps.setInt(2, usuario.getId());
+			ps.setBoolean(3, false);
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()){
+				Prestamo prestamo = new Prestamo();
+				prestamo.setId(rs.getInt("id"));
+				prestamo.setId_libro(rs.getInt("id_libro"));
+				prestamo.setId_usuario(rs.getInt("id_usuario"));
+				prestamo.setFechaPrestamo(rs.getDate("fecha_prestamo"));
+				prestamo.setFechaLimite(rs.getDate("fecha_limite"));
+				prestamo.setEntregado(rs.getBoolean("entregado"));
+				return prestamo;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
+
+	public void UpdateEntregar(Prestamo prestamo) {
+		try {
+			PreparedStatement ps = super.conexion.prepareStatement("UPDATE prestamos SET fecha_prestamo = ?, fecha_limite = ?, entregado = ? WHERE id_usuario = ? AND id_libro = ? AND entregado = ?");
+			
+			ps.setDate(1, new java.sql.Date(prestamo.getFechaPrestamo().getTime()));
+			ps.setDate(2, new java.sql.Date(prestamo.getFechaLimite().getTime()));
+			ps.setBoolean(3, true);
+			ps.setInt(4, prestamo.getId_usuario());
+			ps.setInt(5, prestamo.getId_libro());
+			ps.setBoolean(6, false);
+			
+			ps.execute();
+			
+			System.out.println("El prestamo se ha terminado");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public Prestamo SelectPorIdLibro(Libro libro){
+		try {
+			PreparedStatement ps = super.conexion.prepareStatement("SELECT id_libro = ?, entregado = ? FROM prestamos WHERE  entregado = ?");
+			
+			ps.setInt(1, libro.getId());
+			ps.setBoolean(2, false);
+			ps.setBoolean(3, false);
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()){
+				Prestamo prestamo = new Prestamo();
+				prestamo.setId_libro(rs.getInt("id_libro"));
+				prestamo.setEntregado(rs.getBoolean("entregado"));
+				return prestamo;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
