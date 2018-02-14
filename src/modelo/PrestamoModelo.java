@@ -122,11 +122,10 @@ public class PrestamoModelo extends Conector {
 	
 	public Prestamo SelectPorIdLibro(Libro libro){
 		try {
-			PreparedStatement ps = super.conexion.prepareStatement("SELECT id_libro = ?, entregado = ? FROM prestamos WHERE  entregado = ?");
+			PreparedStatement ps = super.conexion.prepareStatement("SELECT id_libro, entregado FROM prestamos WHERE  id_libro = ? AND entregado = ?");
 			
 			ps.setInt(1, libro.getId());
 			ps.setBoolean(2, false);
-			ps.setBoolean(3, false);
 			ResultSet rs = ps.executeQuery();
 			
 			if(rs.next()){

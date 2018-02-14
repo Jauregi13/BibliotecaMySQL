@@ -98,7 +98,7 @@ public class PrestamoVista {
 			while(usuario == null);
 			Prestamo comprobar_prestamo = prestamoModelo.SelectPorIdLibro(libro);
 			
-			if(comprobar_prestamo.isEntregado() == false){
+			if(comprobar_prestamo != null){
 				System.out.println("El libro está cogido prestado");
 			}
 			else{
