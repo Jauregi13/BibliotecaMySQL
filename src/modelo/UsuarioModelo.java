@@ -89,7 +89,27 @@ public class UsuarioModelo extends Conector{
 		
 	}
 	
-	public void select(int id){
+	public Usuario selectPorId(int id){
+		
+		try {
+			Statement st = super.conexion.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM usuarios WHERE id = " + id);
+			
+			if(rs.next()){
+				Usuario usuario = new Usuario();
+				usuario.setId(rs.getInt("id"));
+				usuario.setNombre(rs.getString("nombre"));
+				usuario.setApellido(rs.getString("apellido"));
+				usuario.setDni(rs.getString("dni"));
+				usuario.setEdad(rs.getInt("edad"));
+				usuario.setFecha_nacimiento(rs.getDate("fecha_nacimiento"));
+				return usuario;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+		
 		
 	}
 	public void delete(int id){

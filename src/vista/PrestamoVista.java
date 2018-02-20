@@ -1,8 +1,10 @@
 package vista;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import modelo.Libro;
@@ -14,9 +16,10 @@ import modelo.UsuarioModelo;
 
 public class PrestamoVista {
 	
-	static final int TOMAR_PRESTADO = 1;
-	static final int ENTREGAR_LIBRO = 2;
-	static final int SALIR = 3;
+	static final int LISTAR_PRESTAMOS = 1;
+	static final int TOMAR_PRESTADO = 2;
+	static final int ENTREGAR_LIBRO = 3;
+	static final int SALIR = 4;
 	
 	public void menuPrestamo(){
 		PrestamoModelo prestamoModelo = new PrestamoModelo();
@@ -26,6 +29,7 @@ public class PrestamoVista {
 		
 		do{
 			System.out.println("------ MENU PRESTAMOS -----");
+			System.out.println(LISTAR_PRESTAMOS + ". Listar todos los prestamos");
 			System.out.println(TOMAR_PRESTADO + ". Tomar prestado un libro");
 			System.out.println(ENTREGAR_LIBRO + ". Entregar libro" );
 			System.out.println(SALIR + " Salir del menu de prestamos");
@@ -33,6 +37,11 @@ public class PrestamoVista {
 			opcion = Integer.parseInt(scan.nextLine());
 			
 			switch (opcion) {
+			
+			case LISTAR_PRESTAMOS:
+				listarPrestamos(scan, prestamoModelo);
+				break;
+				
 			case TOMAR_PRESTADO:
 				realizarPrestamo(scan, prestamoModelo);
 				break;
@@ -53,6 +62,20 @@ public class PrestamoVista {
 		
 		while(opcion != SALIR);
 		
+		
+	}
+
+	private void listarPrestamos(Scanner scan, PrestamoModelo prestamoModelo) {
+		
+		ArrayList<Prestamo> prestamos = new ArrayList();
+		prestamos = prestamoModelo.selectAll();
+		
+		Iterator<Prestamo> i = prestamos.iterator();
+		
+		while(i.hasNext()){
+			Prestamo prestamo = i.next();
+			System.out.println(prestamo.getUsuario().getDni() + " : " + prestamo.getUsuario().getNombre());
+		}
 		
 	}
 
@@ -105,8 +128,8 @@ public class PrestamoVista {
 				// crear prestamo
 				Prestamo prestamo = new Prestamo();
 				// rellenar prestamo
-				prestamo.setId_libro(libro.getId());
-				prestamo.setId_usuario(usuario.getId());
+				prestamo.setLibro(libro);;
+				prestamo.setUsuario(usuario);;
 				
 				Date fecha_actual = new Date();
 				Calendar calendario = Calendar.getInstance();
